@@ -22,7 +22,7 @@ using (var input = new FileStream(inputFile, FileMode.Open))
 	}
 	
 	// Read extra data
-	// Do stub
+	// Do stuff
 }
 ```
 ### Output Example
@@ -55,7 +55,7 @@ using (var output = new FileStream(outputFile, FileMode.Create))
 	exif.Write(output);
 
 	// Write extra data
-	// Do stub
+	// Do stuff
 }
 ```
 
