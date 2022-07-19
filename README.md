@@ -18,8 +18,7 @@ using (var input = new FileStream(inputFile, FileMode.Open))
 		{
 			Console.WriteLine(entry);
 		}
-
-		strips[directory] = ReadTiffStrips(input, directory);
+		
 	}
 	
 	// Read extra data
