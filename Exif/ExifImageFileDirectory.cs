@@ -13,6 +13,30 @@ namespace Exif
     {
         public List<ExifEntry> Entries { get; } = new List<ExifEntry>();
 
+        public long OffsetValuesSize
+        {
+            get
+            {
+                var size = 0;
+                var entryCount = (short)this.Entries.Count;
+
+                for (var i = 0; i < entryCount; i++)
+                {
+                    var entry = this.Entries[i];
+                    var raw = new ExifRawEntry(entry);
+
+                    if (raw.IsOffset == true)
+                    {
+                        size += raw.ValuesSize;
+                    }
+
+                }
+
+                return size;
+            }
+
+        }
+
     }
 
 }

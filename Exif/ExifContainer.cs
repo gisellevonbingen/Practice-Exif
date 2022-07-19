@@ -141,7 +141,7 @@ namespace Exif
             get
             {
                 var size = SignatureLength + EndianCheckerSize + (this.Directories.Count + 1) * 4;
-                size += this.Directories.Select(d => 2 + d.Entries.Count * ExifRawEntry.InfoSize).Sum();
+                size += this.Directories.Sum(d => 2 + d.Entries.Count * ExifRawEntry.InfoSize);
                 return size;
             }
 
@@ -152,24 +152,7 @@ namespace Exif
             get
             {
                 var size = this.InfoSize;
-
-                foreach (var directory in this.Directories)
-                {
-                    var entryCount = (short)directory.Entries.Count;
-
-                    for (var i = 0; i < entryCount; i++)
-                    {
-                        var entry = directory.Entries[i];
-                        var raw = new ExifRawEntry(entry);
-
-                        if (raw.IsOffset == true)
-                        {
-                            size += raw.ValuesSize;
-                        }
-
-                    }
-
-                }
+                size += this.Directories.Sum(d => d.OffsetValuesSize);
 
                 return size;
             }
