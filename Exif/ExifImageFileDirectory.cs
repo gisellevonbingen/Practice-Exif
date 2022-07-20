@@ -114,6 +114,22 @@ namespace Exif
 
         }
 
+        public void SetLong(ExifTagId id, uint value) => this[id] = new ExifValueLongs() { Value = value };
+
+        public void SetLongs(ExifTagId id, uint[] values) => this[id] = new ExifValueLongs() { Values = values };
+
+        public void SetSLong(ExifTagId id, int value) => this[id] = new ExifValueSLongs() { Value = value };
+
+        public void SetSLongs(ExifTagId id, int[] values) => this[id] = new ExifValueSLongs() { Values = values };
+
+        public void SetShort(ExifTagId id, ushort value) => this[id] = new ExifValueShorts() { Value = value };
+
+        public void SetShorts(ExifTagId id, ushort[] values) => this[id] = new ExifValueShorts() { Values = values };
+
+        public void SetSShort(ExifTagId id, short value) => this[id] = new ExifValueSShorts() { Value = value };
+
+        public void SetSShorts(ExifTagId id, short[] values) => this[id] = new ExifValueSShorts() { Values = values };
+
     }
 
 }
