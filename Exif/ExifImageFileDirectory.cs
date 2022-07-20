@@ -130,6 +130,14 @@ namespace Exif
 
         public void SetSShorts(ExifTagId id, short[] values) => this[id] = new ExifValueSShorts() { Values = values };
 
+        public void SetRational(ExifTagId id, ExifRational value) => this[id] = new ExifValueRationals() { Value = value };
+
+        public void SetRationals(ExifTagId id, ExifRational[] values) => this[id] = new ExifValueRationals() { Values = values };
+
+        public void SetSRational(ExifTagId id, ExifSRational value) => this[id] = new ExifValueSRationals() { Value = value };
+
+        public void SetSRationals(ExifTagId id, ExifSRational[] values) => this[id] = new ExifValueSRationals() { Values = values };
+
     }
 
 }
