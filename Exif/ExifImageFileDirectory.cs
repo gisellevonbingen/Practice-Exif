@@ -2,28 +2,38 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Exif
 {
-    public class ExifImageFileDirectory
+    public class ExifImageFileDirectory : Dictionary<ExifTagId, ExifValue>
     {
-        public List<ExifEntry> Entries { get; } = new List<ExifEntry>();
+        public ExifImageFileDirectory()
+        {
+
+        }
+
+        public ExifImageFileDirectory(IDictionary<ExifTagId, ExifValue> dictionary) : base(dictionary)
+        {
+
+        }
+
+        public ExifImageFileDirectory(IEnumerable<KeyValuePair<ExifTagId, ExifValue>> collection) : base(collection)
+        {
+
+        }
 
         public long OffsetValuesSize
         {
             get
             {
                 var size = 0;
-                var entryCount = (short)this.Entries.Count;
 
-                for (var i = 0; i < entryCount; i++)
+                foreach (var pair in this)
                 {
-                    var entry = this.Entries[i];
-                    var raw = new ExifRawEntry(entry);
+                    var raw = new ExifRawEntry(pair);
 
                     if (raw.IsOffset == true)
                     {

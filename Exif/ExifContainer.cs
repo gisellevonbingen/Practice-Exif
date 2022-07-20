@@ -126,8 +126,7 @@ namespace Exif
 
                         }
 
-                        var entry = new ExifEntry() { TagId = raw.TagId, Value = value };
-                        directory.Entries.Add(entry);
+                        directory.Add(raw.TagId, value);
                     }
 
                 }
@@ -141,7 +140,7 @@ namespace Exif
             get
             {
                 var size = SignatureLength + EndianCheckerSize + (this.Directories.Count + 1) * 4;
-                size += this.Directories.Sum(d => 2 + d.Entries.Count * ExifRawEntry.InfoSize);
+                size += this.Directories.Sum(d => 2 + d.Count * ExifRawEntry.InfoSize);
                 return size;
             }
 
@@ -175,13 +174,12 @@ namespace Exif
             {
                 processor.WriteInt((int)(processor.WriteLength + 4)); // IFD Offset, Add own size, Entries will be list right behind
 
-                var entryCount = (short)directory.Entries.Count;
+                var entryCount = (short)directory.Count;
                 processor.WriteShort(entryCount);
 
-                for (var i = 0; i < entryCount; i++)
+                foreach (var pair in directory)
                 {
-                    var entry = directory.Entries[i];
-                    var raw = new ExifRawEntry(entry);
+                    var raw = new ExifRawEntry(pair);
 
                     if (raw.IsOffset == true)
                     {
@@ -193,7 +191,7 @@ namespace Exif
                         using (var ms = new MemoryStream())
                         {
                             var entryProcessor = CreateExifProcessor(ms, processor);
-                            entry.Value.Write(raw, entryProcessor);
+                            pair.Value.Write(raw, entryProcessor);
                             entryProcessor.WriteInt(0);
                             ms.Position = 0L;
 
@@ -209,31 +207,20 @@ namespace Exif
 
             processor.WriteInt(0);
 
-            if (dataAreaOffset == processor.WriteLength)
-            {
-
-            }
-
             foreach (var directory in this.Directories)
             {
-                var entryCount = (short)directory.Entries.Count;
+                var entryCount = (short)directory.Count;
 
-                for (var i = 0; i < entryCount; i++)
+                foreach (var pair in directory)
                 {
-                    var entry = directory.Entries[i];
-                    var raw = new ExifRawEntry(entry);
+                    var raw = new ExifRawEntry(pair);
 
                     if (raw.IsOffset == true)
                     {
-                        entry.Value.Write(raw, processor);
+                        pair.Value.Write(raw, processor);
                     }
 
                 }
-
-            }
-
-            if (dataAreaCursor == processor.WriteLength)
-            {
 
             }
 

@@ -57,7 +57,7 @@ namespace Exif
 
         public override string ToString()
         {
-            return $"[{string.Join(", ", this.Values)}]";
+            return $"Type: {this.Type.Name}, Values: [{string.Join(", ", this.Values)}]";
         }
 
     }

@@ -22,7 +22,7 @@ namespace Exif.Test
                     var directory = exif.Directories[i];
                     Console.WriteLine($"===== Directory {i + 1}/{exif.Directories.Count} =====");
 
-                    foreach (var entry in directory.Entries)
+                    foreach (var entry in directory)
                     {
                         Console.WriteLine(entry);
                     }
@@ -57,16 +57,14 @@ namespace Exif.Test
 
         public static byte[][] ReadTiffStrips(Stream input, ExifImageFileDirectory directory)
         {
-            var stripOffsetsEntry = directory.Entries.FirstOrDefault(e => e.TagId == ExifTagId.StripOffsets);
-            var stripByteCountsEntry = directory.Entries.FirstOrDefault(e => e.TagId == ExifTagId.StripByteCounts);
-            var stripOffsetsValues = stripOffsetsEntry.Value.AsNumbers().AsSigneds.ToArray();
-            var stripByteCountsValues = stripByteCountsEntry.Value.AsNumbers().AsSigneds.ToArray();
-            var strips = new byte[stripOffsetsValues.Length][];
+            var stripOffsets = directory[ExifTagId.StripOffsets].AsNumbers().AsSigneds.ToArray();
+            var stripByteCounts = directory[ExifTagId.StripByteCounts].AsNumbers().AsSigneds.ToArray();
+            var strips = new byte[stripOffsets.Length][];
 
-            for (var i = 0; i < stripOffsetsValues.Length; i++)
+            for (var i = 0; i < stripOffsets.Length; i++)
             {
-                strips[i] = new byte[stripByteCountsValues[i]];
-                input.Position = stripOffsetsValues[i];
+                strips[i] = new byte[stripByteCounts[i]];
+                input.Position = stripOffsets[i];
                 input.Read(strips[i], 0, strips[i].Length);
             }
 
@@ -79,20 +77,16 @@ namespace Exif.Test
 
             foreach (var directory in exif.Directories)
             {
-                var stripOffsetsEntry = directory.Entries.FirstOrDefault(e => e.TagId == ExifTagId.StripOffsets);
-                var stripByteCountsEntry = directory.Entries.FirstOrDefault(e => e.TagId == ExifTagId.StripByteCounts);
-                var stripByteCountsValues = stripByteCountsEntry.Value.AsNumbers().AsSigneds.ToArray();
+                var stripByteCounts = directory[ExifTagId.StripByteCounts].AsNumbers().AsSigneds.ToArray();
+                var newStripOffsets = new uint[stripByteCounts.Length];
 
-                if (stripOffsetsEntry.Value is ExifValueLongs longs)
+                for (var i = 0; i < stripByteCounts.Length; i++)
                 {
-                    for (var i = 0; i < longs.Values.Length; i++)
-                    {
-                        longs.Values[i] = (uint)stripCursor;
-                        stripCursor += stripByteCountsValues[i];
-                    }
-
+                    newStripOffsets[i] = (uint)stripCursor;
+                    stripCursor += stripByteCounts[i];
                 }
 
+                directory[ExifTagId.StripOffsets] = new ExifValueLongs() { Values = newStripOffsets };
             }
 
         }

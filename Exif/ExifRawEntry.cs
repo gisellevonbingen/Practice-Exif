@@ -21,11 +21,11 @@ namespace Exif
 
         }
 
-        public ExifRawEntry(ExifEntry entry)
+        public ExifRawEntry(KeyValuePair<ExifTagId, ExifValue> pair)
         {
-            this.TagId = entry.TagId;
-            this.ValueType = entry.Value.Type;
-            this.ValueCount = entry.Value.RawValueCount;
+            this.TagId = pair.Key;
+            this.ValueType = pair.Value.Type;
+            this.ValueCount = pair.Value.RawValueCount;
         }
 
         public bool IsOffset => this.ValueType.DefaultOffset == true || this.ValuesSize > 4;
