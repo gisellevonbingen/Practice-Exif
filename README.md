@@ -1,8 +1,12 @@
 # Exif
 Study solution about exif/tiff file format
 
-## Read exif data from stream
-### Code Example
+# References
+* https://www.itu.int/itudoc/itu-t/com16/tiff-fx/docs/tiff6.pdf
+* https://youfiles.herokuapp.com/image2tiff/
+
+# Code Example
+## 1. Read exif data from stream
 ```CS
 using (var input = new FileStream(inputFile, FileMode.Open))
 {
@@ -25,7 +29,7 @@ using (var input = new FileStream(inputFile, FileMode.Open))
 	// Do stuff
 }
 ```
-### Output Example
+### Output
 ```
 ===== Directory 1/1 =====
 Id: "NewSubfileType", Value: [0]
@@ -46,9 +50,7 @@ Id: "Predictor", Value: [1]
 Id: "ColorMap", Value: [9252, 60138, 9252, 59367, 8738, 59110]
 ```
 
-## Write exif data to stream
-
-### Code Example
+## 2. Write exif data to stream
 ```CS
 using (var output = new FileStream(outputFile, FileMode.Create))
 {
@@ -59,6 +61,6 @@ using (var output = new FileStream(outputFile, FileMode.Create))
 }
 ```
 
-## Read and rewrite tiff file
+## 3. Read and rewrite tiff file
 
 [Exif.Test\Program.cs](https://github.com/gisellevonbingen/Exif/blob/main/Exif.Test/Program.cs)
